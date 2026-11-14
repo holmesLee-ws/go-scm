@@ -29,7 +29,7 @@ function splitItems(v) {
 }
 
 // 공식 출처로 인정하는 도메인(spec R11). 새 기관을 쓰면 여기와 spec에 함께 더한다.
-const OFFICIAL = ["go.kr", "korea.kr", "iccwbo.org", "wcoomd.org", "wto.org", "europa.eu", "ascm.org", "iso.org", "gs1.org", "trade.gov", "hbr.org", "doi.org", "openlibrary.org"];
+const OFFICIAL = ["go.kr", "korea.kr", "iccwbo.org", "wcoomd.org", "wto.org", "europa.eu", "ascm.org", "iso.org", "gs1.org", "trade.gov", "hbr.org", "doi.org"];
 const sourceProblems = [];
 
 function sourceNames(text) {
@@ -54,7 +54,7 @@ function parseCurriculum(text) {
   const blocks = main.split(/^### /m).slice(1);
   const sources = sourceNames(text);
   if (!sources || sources.size === 0) problems.push("출처 표가 없거나 비어 있음(이름 | 종류 | URL | 조회일)");
-  for (const m of text.normalize("NFKC").matchAll(/(제\s*\d+\s*조|\d+\s*조\s*(제\s*\d+\s*항|의\s*\d+))/g)) problems.push(`조문 번호 금지: ${m[0]}`);
+  for (const m of text.normalize("NFKC").matchAll(/(제\s*\d+\s*조|\d+\s*조\s*(제?\s*\d+\s*항|의\s*\d+))/g)) problems.push(`조문 번호 금지: ${m[0]}`);
   const tail = text.slice(main.length);
   for (const m of tail.matchAll(/^### ([FPBLTDXE]\d+)/gm)) problems.push(`${m[1]}: 「겹침 경계」 뒤에 있는 모듈은 검사되지 않으므로 금지`);
   for (const block of blocks) {
@@ -126,9 +126,17 @@ function main() {
 
   // 권한이 넓어지는 회귀를 막는다. 바꿀 때는 이 목록도 함께 고친다.
   const ALLOW = ["Edit(/learner/state.json)", "Edit(/learner/log.md)", "Edit(/learner/studio/**/*.html)", "Edit(/learner/work/**)", "WebSearch", "WebFetch", "Bash(open learner/studio/*.html)", "Bash(xdg-open learner/studio/*.html)", "Bash(start \"\" learner/studio/*.html)", "PowerShell(Start-Process learner/studio/*.html)"];
+  const DENY = ["Bash(open *..*)", "Bash(xdg-open *..*)", "Bash(start *..*)", "PowerShell(Start-Process *..*)"];
   try {
     const allow = JSON.parse(read(".claude/settings.json")).permissions?.allow ?? [];
     if (JSON.stringify([...allow].sort()) !== JSON.stringify([...ALLOW].sort())) errors.push(`settings.json allow 목록이 고정 목록과 다름: ${allow.filter((a) => !ALLOW.includes(a)).join(", ") || "(누락)"}`);
+    const settings = JSON.parse(read(".claude/settings.json"));
+    const deny = settings.permissions?.deny ?? [];
+    if (JSON.stringify([...deny].sort()) !== JSON.stringify([...DENY].sort())) errors.push("settings.json deny 목록이 고정 목록과 다름");
+    const extraPerm = Object.keys(settings.permissions ?? {}).filter((k) => !["allow", "deny"].includes(k));
+    if (extraPerm.length) errors.push(`settings.json permissions에 허용하지 않은 키: ${extraPerm.join(", ")}`);
+    const extraTop = Object.keys(settings).filter((k) => !["promptSuggestionEnabled", "permissions"].includes(k));
+    if (extraTop.length) errors.push(`settings.json에 허용하지 않은 키: ${extraTop.join(", ")}`);
   } catch {}
 
   if (errors.length) { console.error(errors.map((e) => `FAIL ${e}`).join("\n")); process.exit(1); }
