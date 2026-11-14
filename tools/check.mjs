@@ -28,13 +28,21 @@ function splitItems(v) {
   return out;
 }
 
+// 공식 출처로 인정하는 도메인(spec R11). 새 기관을 쓰면 여기와 spec에 함께 더한다.
+const OFFICIAL = ["go.kr", "korea.kr", "iccwbo.org", "wcoomd.org", "wto.org", "europa.eu", "ascm.org", "iso.org", "gs1.org", "trade.gov", "hbr.org", "doi.org", "openlibrary.org"];
+const sourceProblems = [];
+
 function sourceNames(text) {
   const i = text.indexOf("\n## 출처");
   if (i < 0) return null;
   const names = new Set();
   for (const line of text.slice(i).split("\n")) {
-    const m = line.match(/^\| ([^|]+?) \| [^|]+ \| (<?https?:\/\/[^|]+) \| (\d{4}-\d{2}-\d{2})/);
-    if (m) names.add(m[1].trim());
+    if (!line.startsWith("| ") || /^\| (이름|---)/.test(line)) continue;
+    const m = line.match(/^\| ([^|]+?) \| [^|]+ \| (https?:\/\/[^\s|]+) \| (\d{4}-\d{2}-\d{2}) \|/);
+    if (!m) { sourceProblems.push(`출처 표 행 형식 오류(이름 | 종류 | 맨 URL | YYYY-MM-DD | …): ${line.slice(0, 60)}`); continue; }
+    const host = new URL(m[2]).hostname.replace(/^www\./, "");
+    if (!OFFICIAL.some((d) => host === d || host.endsWith(`.${d}`))) sourceProblems.push(`출처 표 비공식 도메인: ${m[1].trim()} → ${host}`);
+    names.add(m[1].trim());
   }
   return names;
 }
@@ -46,7 +54,9 @@ function parseCurriculum(text) {
   const blocks = main.split(/^### /m).slice(1);
   const sources = sourceNames(text);
   if (!sources || sources.size === 0) problems.push("출처 표가 없거나 비어 있음(이름 | 종류 | URL | 조회일)");
-  for (const m of text.matchAll(/제\s?\d+\s?조/g)) problems.push(`조문 번호 금지: ${m[0]}`);
+  for (const m of text.normalize("NFKC").matchAll(/(제\s*\d+\s*조|\d+\s*조\s*(제\s*\d+\s*항|의\s*\d+))/g)) problems.push(`조문 번호 금지: ${m[0]}`);
+  const tail = text.slice(main.length);
+  for (const m of tail.matchAll(/^### ([FPBLTDXE]\d+)/gm)) problems.push(`${m[1]}: 「겹침 경계」 뒤에 있는 모듈은 검사되지 않으므로 금지`);
   for (const block of blocks) {
     const head = block.split("\n")[0];
     const m = head.match(/^([FPBLTDX]\d+) · (.+)$/);
@@ -79,12 +89,15 @@ function parseCurriculum(text) {
     state.set(id, 2);
   };
   for (const id of modules.keys()) visit(id, []);
+  problems.push(...sourceProblems);
   return { modules, problems };
 }
 
 function findVisualAssets(files) {
   const allowedJs = /^tools\/.*\.m?js$/;
-  return files.filter((f) => /\.(html?|css|svg|png|jpe?g|gif|webp|avif)$/i.test(f) || (/\.m?js$/i.test(f) && !allowedJs.test(f)));
+  const visual = /\.(html?|xhtml|css|svgz?|png|jpe?g|gif|webp|avif|ico|bmp|tiff?|heic|heif|pdf|pptx?|key)$/i;
+  const script = /\.(m?js|cjs|jsx|tsx?)$/i;
+  return files.filter((f) => visual.test(f) || (script.test(f) && !allowedJs.test(f)));
 }
 
 function findTemplateMarkup(name, text) {
@@ -109,7 +122,14 @@ function main() {
   for (const s of readdirSync(join(root, ".claude/skills"))) {
     if (statSync(join(root, ".claude/skills", s)).isDirectory() && !existsSync(join(root, ".claude/skills", s, "SKILL.md"))) errors.push(`스킬 ${s}: SKILL.md 없음`);
   }
-  if (!read(".gitignore").split("\n").includes("learner/")) errors.push(".gitignore에 learner/ 없음");
+  try { execFileSync("git", ["check-ignore", "-q", "learner/state.json"], { cwd: root }); } catch { errors.push("learner/가 git에서 제외되지 않음(.gitignore)"); }
+
+  // 권한이 넓어지는 회귀를 막는다. 바꿀 때는 이 목록도 함께 고친다.
+  const ALLOW = ["Edit(/learner/state.json)", "Edit(/learner/log.md)", "Edit(/learner/studio/**/*.html)", "Edit(/learner/work/**)", "WebSearch", "WebFetch", "Bash(open learner/studio/*.html)", "Bash(xdg-open learner/studio/*.html)", "Bash(start \"\" learner/studio/*.html)", "PowerShell(Start-Process learner/studio/*.html)"];
+  try {
+    const allow = JSON.parse(read(".claude/settings.json")).permissions?.allow ?? [];
+    if (JSON.stringify([...allow].sort()) !== JSON.stringify([...ALLOW].sort())) errors.push(`settings.json allow 목록이 고정 목록과 다름: ${allow.filter((a) => !ALLOW.includes(a)).join(", ") || "(누락)"}`);
+  } catch {}
 
   if (errors.length) { console.error(errors.map((e) => `FAIL ${e}`).join("\n")); process.exit(1); }
   console.log(`OK 모듈 ${modules.size}개, 파일 ${files.length}개 검사`);

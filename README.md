@@ -6,12 +6,14 @@
 
 ## 시작하기
 
-준비물은 Git, [GitHub CLI](https://cli.github.com)(`gh`), Claude Code 또는 Claude Desktop입니다. 비공개 리포이므로 먼저 GitHub에서 보낸 초대를 수락하고, 터미널에서 `gh auth login`으로 로그인합니다. 시작하는 데 다른 설치는 필요 없습니다. 계산 실습은 평소 쓰는 엑셀·구글 시트로 합니다.
+준비물은 Git, [GitHub CLI](https://cli.github.com)(`gh`), [Claude Code](https://code.claude.com/docs) 또는 [Claude Desktop](https://claude.ai/download)입니다. 비공개 리포이므로 먼저 GitHub에서 보낸 초대를 수락하고, 터미널에서 `gh auth login`으로 로그인합니다. 시작하는 데 다른 설치는 필요 없습니다. 계산 실습은 평소 쓰는 엑셀·구글 시트로 합니다.
 
 ```bash
 cd ~/Desktop
 gh repo clone holmesLee-ws/go-scm
 ```
+
+Windows에서 바탕화면이 OneDrive로 옮겨져 있으면 `~/Desktop` 대신 원하는 폴더(예: `~/Documents`)에서 클론해도 됩니다. 아래 경로만 그 폴더로 바꾸세요.
 
 **Claude Code**
 
@@ -24,7 +26,7 @@ claude
 
 **Claude Desktop**
 
-Code 탭에서 데스크탑의 `go-scm` 폴더를 선택합니다. Chat 탭이 아니라 Code 탭이어야 튜터 규칙이 적용됩니다.
+Code 탭에서 환경을 「로컬(Local)」로 두고, 클론한 `go-scm` 폴더를 선택합니다. Chat 탭이 아니라 Code 탭이어야 튜터 규칙이 적용됩니다.
 
 어느 쪽이든 「안녕」이라고 입력하면 시작합니다.
 
