@@ -13,6 +13,10 @@
 
 「이해했어요」, 「아 넵」 직후 같은 내용을 틀리거나 못 풀면 답 길이와 무관하게 `too_fast`로 적고, 다음으로 넘어가기 전에 자기 말로 바꾸는 문제를 낸다.
 
+「이해했어요, 다음 가죠」처럼 내용 없이 넘어가자고 하면, 그 개념을 아직 학습자 말로 확인하지 못했거나 `gaps`에 있으면 **넘어가기 전에 자기 말로 바꾸는 문제 하나만** 낸다(「좋아요, 넘어가기 전에 하나만요」). 해내면 넘어가고, 못 하면 `too_fast`로 적고 단계를 쪼갠다. 그래도 넘어가자고 하면 「건너뛰죠」와 같은 결정으로 보고 따르되 모듈은 `in_progress`, 빈틈은 `gaps`에 남긴다.
+
+`bored_or_ready`는 맞은 답이 이어질 때만 적는다. 방금 틀린 답이 남아 있으면 `bored_or_ready`가 아니다.
+
 ## 상태별 대응
 
 | 상태 | 신호 | 대응 |
@@ -37,4 +41,16 @@
 
 ## 기록
 
-판단이 바뀌면 `learner/state.json`의 `pace`를 고친다. `read`는 `flow`, `too_fast`, `needs_more`, `bored_or_ready`, `stuck` 중 하나다(처음 값 `unknown`은 판단 전을 뜻한다). `evidence`에는 그렇게 본 근거를 한 문장으로, `action`에는 바꾼 방식을 적는다. 바뀌기 전 값은 `pace.history`에 `{at, read, evidence}`로 쌓는다. 학습자에게 맞았던 방식은 `preferences`에 남긴다.
+판단이 바뀌면 `learner/state.json`의 `pace`를 고친다. `read`는 `flow`, `too_fast`, `needs_more`, `bored_or_ready`, `stuck` 중 하나다(처음 값 `unknown`은 판단 전을 뜻하며 history에 넣지 않는다). `evidence`에는 그렇게 본 근거(학습자의 답이나 행동)를 한 문장으로, `action`에는 바꾼 방식을 적는다. 둘을 섞지 않는다. 바뀌기 전 값은 `pace.history`의 **끝에** 붙인다. 그러면 history는 오래된 것부터 시간 순이다.
+
+```json
+"pace": {
+  "read": "too_fast",
+  "evidence": "「이해했어요」 직후 안전재고와 재주문점을 같은 것으로 설명함",
+  "action": "재고 그래프를 날짜별로 쪼개 한 칸씩 예측하게 함",
+  "at": "2026-11-14",
+  "history": [
+    {"at": "2026-11-14", "read": "flow", "evidence": "진단 세 문제를 자기 사례로 답함"}
+  ]
+}
+``` 학습자에게 맞았던 방식은 `preferences`에 남긴다.
