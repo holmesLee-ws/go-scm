@@ -14,7 +14,7 @@
 
 1. 먼저 연다(WebFetch): 국가법령정보센터 `https://www.law.go.kr/법령/<정식 명칭>`(이름 꼴은 아래 「주소 꼴」), 고시는 `https://www.law.go.kr/행정규칙/<정식 명칭>`. 조문 단위로 보려면 `https://www.law.go.kr/법령/<정식 명칭>/제<번호>조`.
 2. law.go.kr이 열리지 않거나(점검·오류) 본문이 비어 있으면, 같은 차례 안에서 대체 경로로 다시 찾는다. 「확인 못 함」은 대체 경로까지 실패했을 때만 쓴다. 대체 경로: 국회법률정보시스템 `https://likms.assembly.go.kr/law`, 그 법령을 맡은 기관 누리집(관세청 `customs.go.kr`과 관세법령정보포털 `unipass.customs.go.kr/clip`, 공정거래위원회 `ftc.go.kr`, 산업통상부 `motir.go.kr`, 전략물자 판정은 무역안보관리원의 전략물자관리시스템 `yestrade.go.kr`). WebSearch는 공식 URL을 찾는 데 쓰고, 찾은 공식 페이지를 다시 연다.
-3. 글로벌 기준은 원 기관을 먼저 연다(인코텀즈 규칙 설명은 ICC `iccwbo.org`·`library.iccwbo.org`, 그다음 정부 해설인 미국 상무부 `trade.gov`). 원 기관(ICC `iccwbo.org`, WCO `wcoomd.org`, WTO `wto.org`, EU `eur-lex.europa.eu`, ASCM `ascm.org`, ISO `iso.org`)에서 확인한다. 원문이 유료(예: Incoterms® 2020 본문, ISO 표준 본문)면 기관이 공개한 요약까지만 확인됐다고 말한다.
+3. 글로벌 기준은 원 기관을 먼저 연다(인코텀즈 규칙 설명은 ICC `iccwbo.org`·`library.iccwbo.org`·`academy.iccwbo.org`, 그다음 정부 해설인 미국 상무부 `trade.gov`). 원 기관(ICC `iccwbo.org`, WCO `wcoomd.org`, WTO `wto.org`, EU `eur-lex.europa.eu`, ASCM `ascm.org`, ISO `iso.org`)에서 확인한다. 원문이 유료(예: Incoterms® 2020 본문, ISO 표준 본문)면 기관이 공개한 요약까지만 확인됐다고 말한다.
 4. 블로그·뉴스·로펌·관세사 사무소 글은 근거로 쓰지 않는다. 공식 출처를 찾는 실마리로만 쓴다.
 5. 끝내 확인하지 못하면 **「확인 못 함」**이라고 말하고, 학습자가 어디서 확인할지 알려 준다. 기억에 기대 단정하지 않는다.
 
@@ -24,7 +24,7 @@
 
 학습자가 경험으로 법령 사실을 말하면(「수입신고는 ○일 안에 하면 돼요」) 기억으로 맞다·틀리다 하지 않는다. 그 차례에 확인한 뒤 판정한다.
 
-탐침을 낼 때도 같다. 탐침의 정답이 법령 사실에 기대면 내기 전에 확인한다.
+탐침을 낼 때도 같다. 탐침의 정답이 법령 사실에 기대면 내기 전에 확인한다. 확인에 실패하면 탐침이나 진단을 빼지 않고, 그 영역에서 **법령 사실 없이 풀 수 있는 문제**(거래 흐름·위험·비용 판단)로 바꿔 낸다.
 
 ## 개정이 잦은 항목
 
