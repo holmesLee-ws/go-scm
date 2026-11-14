@@ -12,7 +12,7 @@
 
 조문 번호, 조문 내용, 세율, 고시·공고의 대상 품목, 기한, 금액, 시행일, 협정 발효 여부를 채팅에 말하거나 페이지에 적을 때는 **그 차례 안에** 공식 출처를 열어 확인한다.
 
-1. 먼저 연다(WebFetch): 국가법령정보센터 `https://www.law.go.kr/법령/<정식 명칭>`(이름 꼴은 아래 「주소 꼴」), 고시는 `https://www.law.go.kr/행정규칙/<정식 명칭>`. 조문 단위로 보려면 `https://www.law.go.kr/법령/<정식 명칭>/제<번호>조`.
+1. 먼저 연다(WebFetch): 국가법령정보센터. 시행일·법률 번호는 `https://www.law.go.kr/법령/<정식 명칭>`, 조문 본문은 아래 「주소 꼴」의 조문 주소, 고시는 `https://www.law.go.kr/행정규칙/<정식 명칭>`.
 2. law.go.kr이 열리지 않거나(점검·오류) 본문이 비어 있으면, 같은 차례 안에서 대체 경로로 다시 찾는다. 「확인 못 함」은 대체 경로까지 실패했을 때만 쓴다. 대체 경로: 국회법률정보시스템 `https://likms.assembly.go.kr/law`, 그 법령을 맡은 기관 누리집(관세청 `customs.go.kr`과 관세법령정보포털 `unipass.customs.go.kr/clip`, 공정거래위원회 `ftc.go.kr`, 산업통상부 `motir.go.kr`, 전략물자 판정은 무역안보관리원의 전략물자관리시스템 `yestrade.go.kr`). WebSearch는 공식 URL을 찾는 데 쓰고, 찾은 공식 페이지를 다시 연다.
 3. 글로벌 기준은 원 기관을 먼저 연다(인코텀즈 규칙 설명은 ICC `iccwbo.org`·`library.iccwbo.org`·`academy.iccwbo.org`, 그다음 정부 해설인 미국 상무부 `trade.gov`). 원 기관(ICC `iccwbo.org`, WCO `wcoomd.org`, WTO `wto.org`, EU `eur-lex.europa.eu`, ASCM `ascm.org`, ISO `iso.org`)에서 확인한다. 원문이 유료(예: Incoterms® 2020 본문, ISO 표준 본문)면 기관이 공개한 요약까지만 확인됐다고 말한다.
 4. 블로그·뉴스·로펌·관세사 사무소 글은 근거로 쓰지 않는다. 공식 출처를 찾는 실마리로만 쓴다.
@@ -52,6 +52,6 @@
 ## 주소 꼴
 
 - 법령: `https://www.law.go.kr/법령/<정식 명칭에서 띄어쓰기를 뺀 것>`. 가운뎃점 같은 문자는 정식 명칭 그대로 둔다. 예: 「하도급거래 공정화에 관한 법률」 → `https://www.law.go.kr/법령/하도급거래공정화에관한법률`.
-- 조문: 그 뒤에 `/제<번호>조`를 붙인다.
+- **조문 본문은 이 주소로 연다**: `https://www.law.go.kr/LSW/lsLinkProc.do?lsNm=<법령명>&joNo=<조 4자리><가지 2자리>&mode=11`. 예: 관세법 제241조 → `lsNm=관세법&joNo=024100`, 하도급법 제3조의6 → `lsNm=하도급거래공정화에관한법률&joNo=000306`. `https://www.law.go.kr/법령/<명칭>` 꼴은 제목·시행일만 오고 조문 본문은 오지 않는다(2026-11-14 실측).
 - 고시·훈령: `https://www.law.go.kr/행정규칙/<정식 명칭에서 띄어쓰기를 뺀 것>`. 관세청 고시는 관세법령정보포털(`https://unipass.customs.go.kr/clip/index.do`)에서도 찾는다.
 - 주소가 열리지 않거나 본문이 비어 있으면 대체 경로로 간다. 같은 주소를 거듭 고쳐 시도하지 않는다.
